@@ -2,6 +2,7 @@
 
 import Foundation
 import UIKit
+import PlaygroundSupport
 
 //: ---
 //: ### 哨岗值
@@ -403,6 +404,94 @@ extension Array {
 }
 
 [1,2,3,4,5].reduce1(+)
+
+
+//: #### **可选值flatmap**
+// optional返回的多重可选值进行平铺
+
+// 实现方案
+//extension Optional {
+//    func flatMap<U>(transform:(Wrapped) -> U?) -> U? {
+//        if let value = self, let transformed = transform(value) {
+//            return transformed
+//        }
+//        return nil
+//    }
+//}
+
+
+//当多重可选值嵌套的情况下处理
+
+let sn = ["1","2","3"]
+let x = sn.first.map{Int($0)}       // Int($0) 返回的也是一个可选   map返回的也是一个可选
+
+type(of: x) // Optional<Optional<Int>>.Type
+
+
+// 多重嵌套，我们需要进行平铺处理
+
+
+let x1 = sn.first.flatMap{Int($0)}
+type(of: x1)     // 被平铺： Optional<Int>.Type
+
+// 以上实现，相当于这个
+if let a = sn.first, let b = Int(a) {
+    print(b)
+}
+
+// 通过这个可以发现flatMap和if let是非常相似的，所以可以将之前的实现进行调整为
+let view1 = URL.init(string: urlString)
+    .flatMap{try? Data.init(contentsOf: $0)}
+    .flatMap{UIImage.init(data: $0)}
+    .map { UIImageView.init(image: $0)}
+
+if let view1 = view1 {
+    PlaygroundPage.current.liveView = view1;
+}
+
+
+//: **使用注意方式：**
+// A.flatMap(B)   A 是可选， B也是可选，使用faltMap最终只返回一层可选
+// A.map(B)       A 是可选，B是当A解包不为nil后执行的值
+
+// 使用flatMap，和map 可以用链式的方式返回最尾部的值
+
+//: #### **使用compactMap过滤nil**
+// 内部实现
+// 使用了lazy，来将数组的时机创建推迟到了使用前的最后一刻，这并不是标准库的实现方案
+//extension Sequence {
+//    func compactMap<B>(_ transform:(Element) -> B?) -> [B] {
+//        return lazy.map(transform).filter{$0 != nil}.map{$0!}     // 获取到非nil数据后，强制解包
+//    }
+//}
+
+
+let nbs = ["1", "2", "3", "foo"]
+var sum = 0
+for case let i? in nbs.map{Int($0)} {
+    sum += i
+}
+
+
+// 也可以使用?? 把nil替换成0:
+let sum1 = nbs.map{Int($0)}.reduce(0) { $0 + ($1 ?? 0)}
+sum1
+
+// 实际上，我们更想将那些nil过滤出去，并将非nil值进行解包的map。 compactMap实现了我们的需要
+let sum2 = nbs.compactMap{Int($0)}.reduce(+)
+sum2
+
+
+
+//: #### **使用可选值判等**
+//有时候，并不关心可选值是否为nil，仅仅只是想判断是否匹配我们需要的值
+let regex = "^hello$"
+if regex.first == "^" {
+    // 只匹配字符串开头
+}
+
+
+//: **当你在使用一个非可选值的时候，如果需要匹配成可选值类型，swift总是会将它升级为一个可选值**
 
 
 //: [Next](@next)
