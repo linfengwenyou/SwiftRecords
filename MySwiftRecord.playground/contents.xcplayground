@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios' display-mode='raw' buildActiveScheme='true' importAppTypes='true'>
+    <pages>
+        <page name='playground基本使用'/>
+        <page name='FAQ'/>
+        <page name='Array'/>
+        <page name='Dictionary'/>
+        <page name='Set'/>
+        <page name='Range'/>
+        <page name='可选值'/>
+    </pages>
+</playground>
