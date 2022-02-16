@@ -43,7 +43,7 @@ CharacterSet()
 //: ---
 //: ### 闭包使用集合的方式
 
-// 找出序列中的唯一元素，并且保证其顺序
+// 找出序列中的唯一元素，并且保证其顺序; 注意  并不是seen保证了顺序，而是filter返回了一个有序数组， seen只是保证了唯一性
 extension Sequence where Element: Hashable {
     func unique() -> [Element] {
         var seen: Set<Element> = []     // 外部变量seen,可以在闭包里访问和修改它的值
@@ -58,8 +58,12 @@ extension Sequence where Element: Hashable {
     }
 }
 
-let a1 = [1,2,3,4,23,34,23,12,23,21,2,3,21,1,2].unique()
-a1
+let a1 = [100,1,2,3,4,23,34,23,12,23,21,2,3,21,1,2].unique()
+
+type(of: a1)
+
+print(a1)
+
 
 
 //: [Next](@next)

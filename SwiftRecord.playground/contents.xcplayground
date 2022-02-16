@@ -7,6 +7,6 @@
         <page name='Dictionary'/>
         <page name='Set'/>
         <page name='Range'/>
-        <page name='可选值'/>
+        <page name='Optional'/>
     </pages>
 </playground>

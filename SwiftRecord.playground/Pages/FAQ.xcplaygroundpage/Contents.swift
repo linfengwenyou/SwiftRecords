@@ -112,7 +112,12 @@ parts1
 //: [参考地址](https://www.jianshu.com/p/df507e16e9c4)
 
 
+//: ---
 
-
+//: ## 问题八：case使用？ 下面的例子，在Optional篇中
+let j = 5
+if case 0..<10 = j {
+    //    print("\(j)在范围内")       // 5在范围内
+}
 
 //: ---

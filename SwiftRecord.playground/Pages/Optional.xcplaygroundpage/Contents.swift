@@ -54,7 +54,9 @@ case .none:
 }
 
 
-// 使用上面的操作 提取关联值非常安全，但是读写起来都不是很顺畅，还是太繁琐了，需要简化下， 使用“?” 作为再switch中对song进行匹配是的模式后缀，另外还可以使用nil字面量来匹配none:
+//: 使用上面的操作 提取关联值非常安全，但是读写起来都不是很顺畅，还是太繁琐了。
+
+//:需要简化下， **使用 "?" 作为在switch中对some进行匹配是的模式后缀，另外还可以使用nil字面量来匹配none:**
 
 // 已失效
 //switch array.firstIndex1(of: "two") {
@@ -69,8 +71,8 @@ case .none:
 //: #### **if let**
 
 /*: 使用 if let 来进行可选值绑定(Optional binding)要比上面使用switch语句要稍好些。if let语句会检查可选值是否为nil,
- *
- *如果不是nil，便会解包可选值。idx的类型就是Int(而不再是可选值)，并且idx也只在这个if let语句的作用域中有效
+
+ 如果不是nil，便会解包可选值。idx的类型就是Int(而不再是可选值)，并且idx也只在这个if let语句的作用域中有效
 */
 
 var array1 = ["one","two","three","four"]
@@ -86,7 +88,8 @@ if let idx = array1.firstIndex(of: "three"), idx != array1.startIndex {
 array1
 
 //: **优点**
-// 可以在同一个if语句中绑定多个值，更赞的是，在后面的绑定中可以使用之前成功解包出来的结果
+//: 可以在同一个if语句中绑定多个值，更赞的是
+//:**在后面的绑定中可以使用之前成功解包出来的结果**
 
 let urlString = "https://www.objc.io/logo.png"
 if let url = URL.init(string: urlString),
@@ -98,7 +101,7 @@ if let url = URL.init(string: urlString),
 }
 
 
-// 多个let的任意部分也能拥有不二值限定的语句
+// 多个let的任意部分也能拥有布尔值限定的语句
 if let url = URL.init(string: urlString), url.pathExtension == "png",
    let data = try? Data.init(contentsOf: url),
    let image = UIImage.init(data: data)
@@ -107,10 +110,11 @@ if let url = URL.init(string: urlString), url.pathExtension == "png",
 }
 
 
-// 最后，可以在同一个if中将可选值绑定，布尔语句和 case let 用任意的方式组合再一起使用
+// 最后，可以在同一个if中将可选值绑定，布尔语句和 case let 用任意的方式组合在一起使用？？？
 
 //: #### **while let**
-//: 和if let非常相似，它标识当一个条件返回nil时，便终止循环
+//: 和if let非常相似，
+//: **它标识当一个条件返回nil时，便终止循环**
 
 // 实现：读取内容，返回可选字符串，读取到尾部是，返回nil
 while let line = readLine() {
@@ -128,7 +132,7 @@ while let line = readLine(), !line.isEmpty {
 let array2 = [1,2,3]
 var iterator = array2.makeIterator()
 while let i = iterator.next(), i % 2 != 0 { // 注意添加了条件语句后，条件不满足会直接停止迭代
-//    print(i, terminator: " ")
+    print(i, terminator: " ")
 }
 
 
@@ -176,7 +180,7 @@ for case let i? in maybeInts {  // 1 2
 //    print(i, terminator: " ")
 }
 
-// 上述使用了x?这个模式，它置灰匹配那些非nil的值，这个语法是.some(x)的简写形式
+// 上述使用了x?这个模式，它只会匹配那些非nil的值，这个语法是.some(x)的简写形式
 
 for case let .some(i) in maybeInts {    // 1*2*
 //    print(i, terminator: "*")
@@ -188,10 +192,11 @@ for case nil in maybeInts {     // No value
 //    print("No value")
 }
 
+//case语句是针对模式匹配展示的，由于maybeInts里面的值是可选类型即为Option枚举类型，我们可以通过case语句来进行模式匹配
 
 //: **注意**
 
-//基于case的模式匹配可以让我们把再switch的匹配中用到的规则同样的应用到if,for 和while上去。最有用的场景是结合可选值，但是也有恰的使用场景
+//基于case的模式匹配可以让我们把再switch的匹配中用到的规则同样的应用到if,for 和while上去。最有用的场景是结合可选值，但是也有其他的使用场景
 
 let j = 5
 if case 0..<10 = j {
@@ -230,7 +235,7 @@ func doStuff() {
     
 }
 
-
+//: #### **可选链**
 
 //: **在进行方法的调用时，需要注意何时加？**
 // A.doSome()   // A 不是可选值
@@ -243,7 +248,7 @@ func doStuff() {
 /*:
 A 如果是可选值
 
-A? 相当于.some(A) 意思就是当A不为nil时才执行
+**A? 相当于.some(A) 意思就是当A不为nil时才执行**
 */
 
 
@@ -316,20 +321,20 @@ let s2:String?? = .some(nil)
 // (a ?? b) ?? c    // 先解包括号内的内容，然后再处理外层
 
 
-// 如果将 ？？ 操作父看做是和'or'语句类似的话，那么可以把多个并列的if let 语句 视作'and'语句
+// 如果将 ?? 操作父看做是和'or'语句类似的话，那么可以把多个并列的if let 语句 视作'and'语句
 
 //if let n = i, let m = j {}
 // 和 if i != nil && j != nil 类似
 
-//: ?? 操作父使用短路求职。当我们用l ?? r时2，只有当l为nil时，r的部分才会被求值。这是因为在操作符的函数声明中，对第二个参数使用了@autoclosure.
+//: ?? 操作符使用短路求值。当我们用 l ?? r 时，只有当l为nil时，r的部分才会被求值。这是因为在操作符的函数声明中，对第二个参数使用了@autoclosure.
 
 
 
-// 由于??无法决定当表达式两侧不共享同样的基础类型时，到底应该使用哪一种类型，编写个方法来实现 ???:
+// 由于 ?? 无法决定当表达式两侧不共享同样的基础类型时，到底应该使用哪一种类型，编写个方法来实现 ???:
 
 
 
-// 让编译器闭嘴提示的方案
+// 让编译器闭嘴提示的方案 infix 运算符再运算值之间， prefix:运算符再运算值前方，postfix:运算符再运算值后方
 infix operator ???: NilCoalescingPrecedence
 
 public func ???<T>(optional:T?, defaultValue: @autoclosure()->String) -> String {
@@ -340,6 +345,7 @@ public func ???<T>(optional:T?, defaultValue: @autoclosure()->String) -> String 
         return defaultValue()
     }
 }
+
 
 let bodyTemperature: Double? = 37.0
 let bloodGlucose:Double? = nil
@@ -375,7 +381,7 @@ if let char = c.first {
     firstCharAsString = String(char)
 }
 
-// 这种只在可选值不为nil的时候才进行转换的模式十分常见。因此，可选值提供了一个map方法专门处理这个问题。它接收一个准话可选值内容的函数作为参数。把刚才转换字符数组的功能用map来实现：
+// 这种只在可选值不为nil的时候才进行转换的模式十分常见。因此，可选值提供了一个map方法专门处理这个问题。它接收一个转换可选值内容的函数作为参数。把刚才转换字符数组的功能用map来实现：
 let firstChar = c.first.map{String($0)}
 
 // 当想要的就是一个可选值的时候，Optional.map就非常有用，假设你要为数组实现变种的reduce方法，这个方法不接受初始值
@@ -448,6 +454,8 @@ let view1 = URL.init(string: urlString)
 if let view1 = view1 {
     PlaygroundPage.current.liveView = view1;
 }
+
+
 
 
 //: **使用注意方式：**
