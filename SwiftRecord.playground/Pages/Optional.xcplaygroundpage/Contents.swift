@@ -502,4 +502,68 @@ if regex.first == "^" {
 //: **当你在使用一个非可选值的时候，如果需要匹配成可选值类型，swift总是会将它升级为一个可选值**
 
 
+//: #### **强制解包的时机**
+
+// 1. 当你能确定你的某个值不可能是nil时，可以使用叹号
+// 2. 希望如果它意外是nil的话，程序应当直接挂掉
+
+//: #### **改进强制解包的错误信息**
+
+// 使用！强制解包，如果程序发生错误，从输出的log中无法通过描述知道 原因是什么，那我们可以通过把注释作为错误信息进行操作
+infix operator !!
+func !!<T>(Wrapped: T?, failureText:@autoclosure()->String) -> T {
+    if let x = Wrapped {return x}
+    fatalError(failureText())
+}
+
+// 示例
+let s = "foo"
+//let i = Int(s) !! "Expecting integer, got \"\(s)\""
+
+
+//: #### **在调试版本中进行断言**
+
+//: 发布环境，让应用崩溃还是很大胆的行为，通常，可以选择再调试版本或者测试版本中进行断言，让程序崩溃，但是最终产品中，把它替换成像是零或者空数组这样的默认值。
+
+//可以定义一个!?来代表这个行为，对失败解包进行断言，并且再断言不触发的发布版本中将值替换为默认值
+
+infix operator !?
+
+func !?<T:ExpressibleByIntegerLiteral> (wrapped: T?, failureText:@autoclosure ()->String) -> T {
+    assert(wrapped != nil, failureText())
+    return wrapped ?? 0;
+}
+
+// 下面代码将再调试时触发断言，发布版本中打印0
+let b1 = "20"
+let i = Int(b1) !? "Expecting integer, got\"\(b1)\""
+
+
+
+//: #### **隐式解包可选值**
+//像UIView!这种在类型后面加一个感叹号的隐式解包可选值，无论何时使用它们的时候都会自动强制解包，但是它们依然是可选值
+
+// 存在的原因：
+
+// 1. 暂时还需要到Objective-C里取调用那些没有检查返回是否存在的代码，或者会调用一个没有针对Swift做注解的C语言库
+
+// 2. 因为一个值展示很短暂的为nil，在一段时间后，它就再也不会是nil
+// 常见的场景就是interfaceBuild在ViewController的声明周期使用的方式， viewController会延时创建他们的View，所以在viewController自身已经被初始化，但是它的view还没被加载的这段时间内 就会出现这种场景
+
+
+
+//: #### **隐式的可选值行为**
+
+// 虽然隐式解包的可选值再行为上就好像是非可选值一样，不过依然可以对它们使用可选链
+
+var  sr:String! = "Hello"
+sr?.isEmpty
+
+if let s = sr {
+    print(s)
+}
+
+sr = nil
+sr ?? "GoodBye"
+
 //: [Next](@next)

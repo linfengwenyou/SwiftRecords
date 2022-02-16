@@ -8,5 +8,6 @@
         <page name='Set'/>
         <page name='Range'/>
         <page name='Optional'/>
+        <page name='Function'/>
     </pages>
 </playground>
