@@ -21,7 +21,7 @@ let funcVar = printInt
 funcVar(10)
 
 
-//: 总结： 不能将参数标签赋值给一个类型是函数的变量， 未来可能会改变
+//: 总结： 不能将参数标签赋值给一个类型是函数的变量（ 未来可能会改变）
 
 
 
@@ -44,7 +44,7 @@ func returnFunc()->(Int)->String {
     }
     return innerFuc
 }
-
+// returnFunc返回的是个函数，要赋值给变量的是返回的函数，不是它本身
 let myFunc = returnFunc()
 
 myFunc(10)
@@ -146,6 +146,19 @@ func isEven<T:BinaryInteger>(_ i : T) -> Bool {
 
 // 如果赋值，变量 int8IsEven 不能包含泛型
 let int8IsEven:(Int8) -> Bool = isEven
+
+
+
+//: 只需要知道一件事： 闭包和函数，没什么不同，只是声明的时候有方法名，和匿名，及{}的形式不同，其他没什么了，他们都一样，即是函数也是闭包
+
+
+//: # 函数的灵活性
+
+let myArr = [3,1,2]
+
+//: **接受两个对象作为参数，并在他们顺序正确的时候返回true**
+myArr.sorted(by: <)     // 从小到大
+
 
 
 //: ---
